@@ -1,0 +1,101 @@
+code_site,code_station,date_obs_elab,resultat_obs_elab,date_prod,code_statut,libelle_statut,code_methode,libelle_methode,code_qualification,libelle_qualification,longitude,latitude,grandeur_hydro_elab,code_station_id,nom_station,type_donnee,saison
+Y1112010,Y111201001,2022-12-24,3763.0,2025-04-24T14:40:18Z,16,Donnée validée,8,Calculée,20,Bonne,2.195545993,42.85649179,QmnJ,Y111201001,L'Aude à Belvianes-et-Cavirac,QmnJ,Hiver
+Y3404020,Y340402001,2021-10-04,695.0,2025-04-24T17:10:45Z,16,Donnée validée,10,Expertisée,16,Non qualifiée,3.928565802,43.951404499,QmnJ,Y340402001,Le Vidourle à Conqueyrac [Barrage de Conqueyrac],QmnJ,Automne
+O2550002,O255000201,2020-11-07,2337.0,2025-04-24T15:12:27Z,16,Donnée validée,10,Expertisée,20,Bonne,1.244217269,43.728025068,QmnJ,O255000201,La Save à Larra,QmnJ,Automne
+Y1112010,Y111201001,2022-03-26,14357.0,2025-04-24T14:40:18Z,16,Donnée validée,8,Calculée,20,Bonne,2.195545993,42.85649179,QmnJ,Y111201001,L'Aude à Belvianes-et-Cavirac,QmnJ,Printemps
+O2550002,O255000201,2020-04-26,6209.0,2025-04-24T15:12:27Z,16,Donnée validée,10,Expertisée,20,Bonne,1.244217269,43.728025068,QmnJ,O255000201,La Save à Larra,QmnJ,Printemps
+P2220002,P222000201,2018-01-13,229.0,2025-04-24T16:53:09Z,12,Donnée pré-validée,10,Expertisée,20,Bonne,1.563955176,44.79562402,QmnJ,P222000201,[Source de Fontbelle] à Calès - L'ouysse à Calès (Source de Fontbelle),QmnJ,Hiver
+Y2140010,Y214001002,2018-09-29,2349.0,2025-04-24T18:26:13Z,16,Donnée validée,10,Expertisée,20,Bonne,3.534623845,43.651522709,QmnJ,Y214001002,L'Hérault à Gignac - Aval,QmnJ,Automne
+O2550002,O255000201,2020-03-04,45275.0,2025-04-24T15:12:27Z,16,Donnée validée,10,Expertisée,12,Douteuse,1.244217269,43.728025068,QmnJ,O255000201,La Save à Larra,QmnJ,Printemps
+Y1112010,Y111201001,2022-09-06,4408.0,2025-04-24T14:40:18Z,16,Donnée validée,8,Calculée,20,Bonne,2.195545993,42.85649179,QmnJ,Y111201001,L'Aude à Belvianes-et-Cavirac,QmnJ,Automne
+O2550002,O255000201,2020-01-10,4958.0,2025-04-24T15:12:27Z,16,Donnée validée,10,Expertisée,20,Bonne,1.244217269,43.728025068,QmnJ,O255000201,La Save à Larra,QmnJ,Hiver
+O2550002,O255000201,2020-01-03,5576.0,2025-04-24T15:12:27Z,16,Donnée validée,10,Expertisée,20,Bonne,1.244217269,43.728025068,QmnJ,O255000201,La Save à Larra,QmnJ,Hiver
+Y1112010,Y111201001,2022-08-05,5267.0,2025-04-24T14:40:18Z,16,Donnée validée,8,Calculée,20,Bonne,2.195545993,42.85649179,QmnJ,Y111201001,L'Aude à Belvianes-et-Cavirac,QmnJ,Été
+Y3404020,Y340402001,2021-05-14,10.0,2025-04-24T17:10:45Z,16,Donnée validée,10,Expertisée,20,Bonne,3.928565802,43.951404499,QmnJ,Y340402001,Le Vidourle à Conqueyrac [Barrage de Conqueyrac],QmnJ,Printemps
+Y1112010,Y111201001,2022-09-28,3093.0,2025-04-24T14:40:18Z,16,Donnée validée,8,Calculée,20,Bonne,2.195545993,42.85649179,QmnJ,Y111201001,L'Aude à Belvianes-et-Cavirac,QmnJ,Automne
+Y1112010,Y111201001,2022-10-05,3067.0,2025-04-24T14:40:18Z,16,Donnée validée,8,Calculée,20,Bonne,2.195545993,42.85649179,QmnJ,Y111201001,L'Aude à Belvianes-et-Cavirac,QmnJ,Automne
+Y2140010,Y214001002,2018-10-27,15669.0,2025-04-24T18:26:13Z,16,Donnée validée,10,Expertisée,20,Bonne,3.534623845,43.651522709,QmnJ,Y214001002,L'Hérault à Gignac - Aval,QmnJ,Automne
+Y2140010,Y214001002,2018-02-24,20418.0,2025-04-24T18:26:13Z,16,Donnée validée,10,Expertisée,20,Bonne,3.534623845,43.651522709,QmnJ,Y214001002,L'Hérault à Gignac - Aval,QmnJ,Hiver
+Y2140010,Y214001002,2018-07-14,11001.0,2025-04-24T18:26:13Z,16,Donnée validée,10,Expertisée,20,Bonne,3.534623845,43.651522709,QmnJ,Y214001002,L'Hérault à Gignac - Aval,QmnJ,Été
+P2220002,P222000201,2018-02-02,211.0,2025-04-24T16:53:09Z,12,Donnée pré-validée,10,Expertisée,20,Bonne,1.563955176,44.79562402,QmnJ,P222000201,[Source de Fontbelle] à Calès - L'ouysse à Calès (Source de Fontbelle),QmnJ,Hiver
+P2220002,P222000201,2018-01-05,420.0,2025-04-24T16:53:09Z,12,Donnée pré-validée,10,Expertisée,12,Douteuse,1.563955176,44.79562402,QmnJ,P222000201,[Source de Fontbelle] à Calès - L'ouysse à Calès (Source de Fontbelle),QmnJ,Hiver
+Y3404020,Y340402001,2021-11-03,77.0,2025-04-24T17:10:45Z,16,Donnée validée,10,Expertisée,16,Non qualifiée,3.928565802,43.951404499,QmnJ,Y340402001,Le Vidourle à Conqueyrac [Barrage de Conqueyrac],QmnJ,Automne
+O2550002,O255000201,2020-11-16,1884.0,2025-04-24T15:12:27Z,16,Donnée validée,10,Expertisée,20,Bonne,1.244217269,43.728025068,QmnJ,O255000201,La Save à Larra,QmnJ,Automne
+Y2140010,Y214001002,2018-09-16,2512.0,2025-04-24T18:26:13Z,16,Donnée validée,10,Expertisée,20,Bonne,3.534623845,43.651522709,QmnJ,Y214001002,L'Hérault à Gignac - Aval,QmnJ,Automne
+Y3404020,Y340402001,2021-09-15,4.0,2025-01-29T17:28:00Z,16,Donnée validée,10,Expertisée,16,Non qualifiée,3.928565802,43.951404499,QmnJ,Y340402001,Le Vidourle à Conqueyrac [Barrage de Conqueyrac],QmnJ,Automne
+Y1112010,Y111201001,2022-07-31,5314.0,2025-04-24T14:40:18Z,16,Donnée validée,8,Calculée,20,Bonne,2.195545993,42.85649179,QmnJ,Y111201001,L'Aude à Belvianes-et-Cavirac,QmnJ,Été
+Y3404020,Y340402001,2021-09-27,6.0,2025-04-24T17:10:45Z,16,Donnée validée,10,Expertisée,16,Non qualifiée,3.928565802,43.951404499,QmnJ,Y340402001,Le Vidourle à Conqueyrac [Barrage de Conqueyrac],QmnJ,Automne
+Y3404020,Y340402001,2021-09-14,5.0,2025-04-24T17:10:45Z,16,Donnée validée,10,Expertisée,16,Non qualifiée,3.928565802,43.951404499,QmnJ,Y340402001,Le Vidourle à Conqueyrac [Barrage de Conqueyrac],QmnJ,Automne
+Y3404020,Y340402001,2021-11-25,5.0,2025-01-29T17:28:00Z,16,Donnée validée,10,Expertisée,16,Non qualifiée,3.928565802,43.951404499,QmnJ,Y340402001,Le Vidourle à Conqueyrac [Barrage de Conqueyrac],QmnJ,Automne
+Y3404020,Y340402001,2021-10-07,3.0,2025-01-29T17:28:00Z,16,Donnée validée,10,Expertisée,16,Non qualifiée,3.928565802,43.951404499,QmnJ,Y340402001,Le Vidourle à Conqueyrac [Barrage de Conqueyrac],QmnJ,Automne
+O2550002,O255000201,2020-03-27,4946.0,2025-04-24T15:12:27Z,16,Donnée validée,10,Expertisée,20,Bonne,1.244217269,43.728025068,QmnJ,O255000201,La Save à Larra,QmnJ,Printemps
+P2220002,P222000201,2018-09-16,0.0,2025-04-24T16:53:09Z,12,Donnée pré-validée,10,Expertisée,12,Douteuse,1.563955176,44.79562402,QmnJ,P222000201,[Source de Fontbelle] à Calès - L'ouysse à Calès (Source de Fontbelle),QmnJ,Automne
+P2220002,P222000201,2018-06-09,152.0,2025-04-24T16:53:09Z,12,Donnée pré-validée,10,Expertisée,20,Bonne,1.563955176,44.79562402,QmnJ,P222000201,[Source de Fontbelle] à Calès - L'ouysse à Calès (Source de Fontbelle),QmnJ,Été
+P2220002,P222000201,2018-06-22,130.0,2025-04-24T16:53:09Z,12,Donnée pré-validée,10,Expertisée,20,Bonne,1.563955176,44.79562402,QmnJ,P222000201,[Source de Fontbelle] à Calès - L'ouysse à Calès (Source de Fontbelle),QmnJ,Été
+Y1112010,Y111201001,2022-09-02,4371.0,2025-04-24T14:40:18Z,16,Donnée validée,8,Calculée,20,Bonne,2.195545993,42.85649179,QmnJ,Y111201001,L'Aude à Belvianes-et-Cavirac,QmnJ,Automne
+Y1112010,Y111201001,2022-03-04,13707.0,2025-04-24T14:40:18Z,16,Donnée validée,8,Calculée,20,Bonne,2.195545993,42.85649179,QmnJ,Y111201001,L'Aude à Belvianes-et-Cavirac,QmnJ,Printemps
+Y2140010,Y214001002,2018-06-21,20932.0,2025-04-24T18:26:13Z,16,Donnée validée,10,Expertisée,20,Bonne,3.534623845,43.651522709,QmnJ,Y214001002,L'Hérault à Gignac - Aval,QmnJ,Été
+Y3404020,Y340402001,2021-10-31,15430.0,2025-04-24T17:10:45Z,16,Donnée validée,10,Expertisée,16,Non qualifiée,3.928565802,43.951404499,QmnJ,Y340402001,Le Vidourle à Conqueyrac [Barrage de Conqueyrac],QmnJ,Automne
+Y2140010,Y214001002,2018-12-31,17300.0,2025-04-24T18:26:13Z,16,Donnée validée,10,Expertisée,20,Bonne,3.534623845,43.651522709,QmnJ,Y214001002,L'Hérault à Gignac - Aval,QmnJ,Hiver
+Y1112010,Y111201001,2022-09-07,4307.0,2025-04-24T14:40:18Z,16,Donnée validée,8,Calculée,20,Bonne,2.195545993,42.85649179,QmnJ,Y111201001,L'Aude à Belvianes-et-Cavirac,QmnJ,Automne
+P2220002,P222000201,2018-11-02,19.0,2025-04-24T16:53:09Z,12,Donnée pré-validée,10,Expertisée,12,Douteuse,1.563955176,44.79562402,QmnJ,P222000201,[Source de Fontbelle] à Calès - L'ouysse à Calès (Source de Fontbelle),QmnJ,Automne
+P2220002,P222000201,2018-01-17,294.0,2025-04-24T16:53:09Z,12,Donnée pré-validée,10,Expertisée,20,Bonne,1.563955176,44.79562402,QmnJ,P222000201,[Source de Fontbelle] à Calès - L'ouysse à Calès (Source de Fontbelle),QmnJ,Hiver
+P2220002,P222000201,2018-10-21,2.0,2025-04-24T16:53:09Z,12,Donnée pré-validée,10,Expertisée,12,Douteuse,1.563955176,44.79562402,QmnJ,P222000201,[Source de Fontbelle] à Calès - L'ouysse à Calès (Source de Fontbelle),QmnJ,Automne
+Y3404020,Y340402001,2021-10-06,6.0,2025-01-29T17:28:00Z,16,Donnée validée,10,Expertisée,16,Non qualifiée,3.928565802,43.951404499,QmnJ,Y340402001,Le Vidourle à Conqueyrac [Barrage de Conqueyrac],QmnJ,Automne
+Y2140010,Y214001002,2018-09-10,2477.0,2025-04-24T18:26:13Z,16,Donnée validée,10,Expertisée,20,Bonne,3.534623845,43.651522709,QmnJ,Y214001002,L'Hérault à Gignac - Aval,QmnJ,Automne
+O2550002,O255000201,2020-06-29,4053.0,2025-04-24T15:12:27Z,16,Donnée validée,10,Expertisée,20,Bonne,1.244217269,43.728025068,QmnJ,O255000201,La Save à Larra,QmnJ,Été
+Y2140010,Y214001002,2018-03-26,43899.0,2025-04-24T18:26:13Z,16,Donnée validée,8,Calculée,20,Bonne,3.534623845,43.651522709,QmnJ,Y214001002,L'Hérault à Gignac - Aval,QmnJ,Printemps
+P2220002,P222000201,2018-01-15,209.0,2025-04-24T16:53:09Z,12,Donnée pré-validée,10,Expertisée,20,Bonne,1.563955176,44.79562402,QmnJ,P222000201,[Source de Fontbelle] à Calès - L'ouysse à Calès (Source de Fontbelle),QmnJ,Hiver
+Y1112010,Y111201001,2022-05-29,10477.0,2025-04-24T14:40:18Z,16,Donnée validée,8,Calculée,20,Bonne,2.195545993,42.85649179,QmnJ,Y111201001,L'Aude à Belvianes-et-Cavirac,QmnJ,Printemps
+Y1112010,Y111201001,2022-02-01,14647.0,2025-04-24T14:40:18Z,16,Donnée validée,8,Calculée,20,Bonne,2.195545993,42.85649179,QmnJ,Y111201001,L'Aude à Belvianes-et-Cavirac,QmnJ,Hiver
+O2550002,O255000201,2020-10-23,1777.0,2025-04-24T15:12:27Z,16,Donnée validée,10,Expertisée,20,Bonne,1.244217269,43.728025068,QmnJ,O255000201,La Save à Larra,QmnJ,Automne
+Y2140010,Y214001002,2018-01-16,97164.0,2025-04-24T18:26:13Z,16,Donnée validée,10,Expertisée,20,Bonne,3.534623845,43.651522709,QmnJ,Y214001002,L'Hérault à Gignac - Aval,QmnJ,Hiver
+Y1112010,Y111201001,2022-07-13,4674.0,2025-04-24T14:40:18Z,16,Donnée validée,8,Calculée,20,Bonne,2.195545993,42.85649179,QmnJ,Y111201001,L'Aude à Belvianes-et-Cavirac,QmnJ,Été
+Y2140010,Y214001002,2018-06-14,33103.0,2025-04-24T18:26:13Z,16,Donnée validée,10,Expertisée,20,Bonne,3.534623845,43.651522709,QmnJ,Y214001002,L'Hérault à Gignac - Aval,QmnJ,Été
+O2550002,O255000201,2020-12-24,5507.0,2025-04-24T15:12:27Z,16,Donnée validée,10,Expertisée,20,Bonne,1.244217269,43.728025068,QmnJ,O255000201,La Save à Larra,QmnJ,Hiver
+Y2140010,Y214001002,2018-10-30,13990.0,2025-04-24T18:26:13Z,16,Donnée validée,10,Expertisée,20,Bonne,3.534623845,43.651522709,QmnJ,Y214001002,L'Hérault à Gignac - Aval,QmnJ,Automne
+Y1112010,Y111201001,2022-04-12,11872.0,2025-04-24T14:40:18Z,16,Donnée validée,8,Calculée,20,Bonne,2.195545993,42.85649179,QmnJ,Y111201001,L'Aude à Belvianes-et-Cavirac,QmnJ,Printemps
+P2220002,P222000201,2018-05-13,115.0,2025-04-24T16:53:09Z,12,Donnée pré-validée,10,Expertisée,20,Bonne,1.563955176,44.79562402,QmnJ,P222000201,[Source de Fontbelle] à Calès - L'ouysse à Calès (Source de Fontbelle),QmnJ,Printemps
+Y1112010,Y111201001,2022-09-11,3673.0,2025-04-24T14:40:18Z,16,Donnée validée,8,Calculée,20,Bonne,2.195545993,42.85649179,QmnJ,Y111201001,L'Aude à Belvianes-et-Cavirac,QmnJ,Automne
+O2550002,O255000201,2020-01-31,5592.0,2025-04-24T15:12:27Z,16,Donnée validée,10,Expertisée,20,Bonne,1.244217269,43.728025068,QmnJ,O255000201,La Save à Larra,QmnJ,Hiver
+P2220002,P222000201,2018-11-10,116.0,2025-04-24T16:53:09Z,12,Donnée pré-validée,10,Expertisée,20,Bonne,1.563955176,44.79562402,QmnJ,P222000201,[Source de Fontbelle] à Calès - L'ouysse à Calès (Source de Fontbelle),QmnJ,Automne
+Y3404020,Y340402001,2021-09-16,3.0,2025-01-29T17:28:00Z,16,Donnée validée,10,Expertisée,16,Non qualifiée,3.928565802,43.951404499,QmnJ,Y340402001,Le Vidourle à Conqueyrac [Barrage de Conqueyrac],QmnJ,Automne
+Y2140010,Y214001002,2018-11-30,62579.0,2025-04-24T18:26:13Z,16,Donnée validée,10,Expertisée,20,Bonne,3.534623845,43.651522709,QmnJ,Y214001002,L'Hérault à Gignac - Aval,QmnJ,Automne
+Y3404020,Y340402001,2021-05-13,17.0,2025-04-24T17:10:45Z,16,Donnée validée,10,Expertisée,20,Bonne,3.928565802,43.951404499,QmnJ,Y340402001,Le Vidourle à Conqueyrac [Barrage de Conqueyrac],QmnJ,Printemps
+O2550002,O255000201,2020-02-22,3417.0,2025-04-24T15:12:27Z,16,Donnée validée,10,Expertisée,20,Bonne,1.244217269,43.728025068,QmnJ,O255000201,La Save à Larra,QmnJ,Hiver
+O2550002,O255000201,2020-09-19,784.0,2025-04-24T15:12:27Z,16,Donnée validée,10,Expertisée,12,Douteuse,1.244217269,43.728025068,QmnJ,O255000201,La Save à Larra,QmnJ,Automne
+O2550002,O255000201,2020-08-04,1196.0,2025-04-24T15:12:27Z,16,Donnée validée,10,Expertisée,20,Bonne,1.244217269,43.728025068,QmnJ,O255000201,La Save à Larra,QmnJ,Été
+Y1112010,Y111201001,2022-11-11,2700.0,2025-04-24T14:40:18Z,16,Donnée validée,8,Calculée,20,Bonne,2.195545993,42.85649179,QmnJ,Y111201001,L'Aude à Belvianes-et-Cavirac,QmnJ,Automne
+Y3404020,Y340402001,2021-11-05,5.0,2025-01-29T17:28:00Z,16,Donnée validée,10,Expertisée,16,Non qualifiée,3.928565802,43.951404499,QmnJ,Y340402001,Le Vidourle à Conqueyrac [Barrage de Conqueyrac],QmnJ,Automne
+O2550002,O255000201,2020-07-09,1452.0,2025-04-24T15:12:27Z,16,Donnée validée,10,Expertisée,20,Bonne,1.244217269,43.728025068,QmnJ,O255000201,La Save à Larra,QmnJ,Été
+Y3404020,Y340402001,2021-11-02,4035.0,2025-04-24T17:10:45Z,16,Donnée validée,10,Expertisée,16,Non qualifiée,3.928565802,43.951404499,QmnJ,Y340402001,Le Vidourle à Conqueyrac [Barrage de Conqueyrac],QmnJ,Automne
+Y1112010,Y111201001,2022-06-07,9896.0,2025-04-24T14:40:18Z,16,Donnée validée,8,Calculée,20,Bonne,2.195545993,42.85649179,QmnJ,Y111201001,L'Aude à Belvianes-et-Cavirac,QmnJ,Été
+P2220002,P222000201,2018-03-18,221.0,2025-04-24T16:53:09Z,12,Donnée pré-validée,10,Expertisée,20,Bonne,1.563955176,44.79562402,QmnJ,P222000201,[Source de Fontbelle] à Calès - L'ouysse à Calès (Source de Fontbelle),QmnJ,Printemps
+Y1112010,Y111201001,2022-08-06,5114.0,2025-04-24T14:40:18Z,16,Donnée validée,8,Calculée,20,Bonne,2.195545993,42.85649179,QmnJ,Y111201001,L'Aude à Belvianes-et-Cavirac,QmnJ,Été
+Y3404020,Y340402001,2021-05-11,19268.0,2025-04-24T17:10:45Z,16,Donnée validée,10,Expertisée,20,Bonne,3.928565802,43.951404499,QmnJ,Y340402001,Le Vidourle à Conqueyrac [Barrage de Conqueyrac],QmnJ,Printemps
+Y3404020,Y340402001,2021-10-05,14.0,2025-04-24T17:10:45Z,16,Donnée validée,10,Expertisée,16,Non qualifiée,3.928565802,43.951404499,QmnJ,Y340402001,Le Vidourle à Conqueyrac [Barrage de Conqueyrac],QmnJ,Automne
+P2220002,P222000201,2018-01-31,196.0,2025-04-24T16:53:09Z,12,Donnée pré-validée,10,Expertisée,20,Bonne,1.563955176,44.79562402,QmnJ,P222000201,[Source de Fontbelle] à Calès - L'ouysse à Calès (Source de Fontbelle),QmnJ,Hiver
+Y2140010,Y214001002,2018-04-21,54872.0,2025-04-24T18:26:13Z,16,Donnée validée,10,Expertisée,20,Bonne,3.534623845,43.651522709,QmnJ,Y214001002,L'Hérault à Gignac - Aval,QmnJ,Printemps
+Y2140010,Y214001002,2018-05-06,34330.0,2025-04-24T18:26:13Z,16,Donnée validée,4,Reconstituée,20,Bonne,3.534623845,43.651522709,QmnJ,Y214001002,L'Hérault à Gignac - Aval,QmnJ,Printemps
+P2220002,P222000201,2018-05-24,121.0,2025-04-24T16:53:09Z,12,Donnée pré-validée,10,Expertisée,20,Bonne,1.563955176,44.79562402,QmnJ,P222000201,[Source de Fontbelle] à Calès - L'ouysse à Calès (Source de Fontbelle),QmnJ,Printemps
+Y3404020,Y340402001,2021-10-30,11824.0,2025-01-29T17:28:00Z,16,Donnée validée,10,Expertisée,16,Non qualifiée,3.928565802,43.951404499,QmnJ,Y340402001,Le Vidourle à Conqueyrac [Barrage de Conqueyrac],QmnJ,Automne
+Y1112010,Y111201001,2022-06-04,9084.0,2025-04-24T14:40:18Z,16,Donnée validée,8,Calculée,20,Bonne,2.195545993,42.85649179,QmnJ,Y111201001,L'Aude à Belvianes-et-Cavirac,QmnJ,Été
+P2220002,P222000201,2018-01-16,214.0,2025-04-24T16:53:09Z,12,Donnée pré-validée,10,Expertisée,20,Bonne,1.563955176,44.79562402,QmnJ,P222000201,[Source de Fontbelle] à Calès - L'ouysse à Calès (Source de Fontbelle),QmnJ,Hiver
+Y2140010,Y214001002,2018-07-13,8329.0,2025-04-24T18:26:13Z,16,Donnée validée,10,Expertisée,20,Bonne,3.534623845,43.651522709,QmnJ,Y214001002,L'Hérault à Gignac - Aval,QmnJ,Été
+Y1112010,Y111201001,2022-02-19,9648.0,2025-04-24T14:40:18Z,16,Donnée validée,8,Calculée,20,Bonne,2.195545993,42.85649179,QmnJ,Y111201001,L'Aude à Belvianes-et-Cavirac,QmnJ,Hiver
+P2220002,P222000201,2018-02-13,213.0,2025-04-24T16:53:09Z,12,Donnée pré-validée,10,Expertisée,20,Bonne,1.563955176,44.79562402,QmnJ,P222000201,[Source de Fontbelle] à Calès - L'ouysse à Calès (Source de Fontbelle),QmnJ,Hiver
+Y2140010,Y214001002,2018-02-23,21154.0,2025-04-24T18:26:13Z,16,Donnée validée,10,Expertisée,20,Bonne,3.534623845,43.651522709,QmnJ,Y214001002,L'Hérault à Gignac - Aval,QmnJ,Hiver
+O2550002,O255000201,2020-02-08,4816.0,2025-04-24T15:12:27Z,16,Donnée validée,10,Expertisée,20,Bonne,1.244217269,43.728025068,QmnJ,O255000201,La Save à Larra,QmnJ,Hiver
+Y2140010,Y214001002,2018-02-09,61703.0,2025-04-24T18:26:13Z,16,Donnée validée,10,Expertisée,20,Bonne,3.534623845,43.651522709,QmnJ,Y214001002,L'Hérault à Gignac - Aval,QmnJ,Hiver
+P2220002,P222000201,2018-09-18,0.0,2025-04-24T16:53:09Z,12,Donnée pré-validée,10,Expertisée,12,Douteuse,1.563955176,44.79562402,QmnJ,P222000201,[Source de Fontbelle] à Calès - L'ouysse à Calès (Source de Fontbelle),QmnJ,Automne
+Y2140010,Y214001002,2018-12-01,69830.0,2025-04-24T18:26:13Z,16,Donnée validée,10,Expertisée,20,Bonne,3.534623845,43.651522709,QmnJ,Y214001002,L'Hérault à Gignac - Aval,QmnJ,Hiver
+O2550002,O255000201,2020-10-25,1784.0,2025-04-24T15:12:27Z,16,Donnée validée,10,Expertisée,20,Bonne,1.244217269,43.728025068,QmnJ,O255000201,La Save à Larra,QmnJ,Automne
+O2550002,O255000201,2020-11-21,1818.0,2025-04-24T15:12:27Z,16,Donnée validée,10,Expertisée,20,Bonne,1.244217269,43.728025068,QmnJ,O255000201,La Save à Larra,QmnJ,Automne
+P2220002,P222000201,2018-03-09,208.0,2025-04-24T16:53:09Z,12,Donnée pré-validée,10,Expertisée,20,Bonne,1.563955176,44.79562402,QmnJ,P222000201,[Source de Fontbelle] à Calès - L'ouysse à Calès (Source de Fontbelle),QmnJ,Printemps
+Y3404020,Y340402001,2021-11-26,4.0,2025-01-29T17:28:00Z,16,Donnée validée,10,Expertisée,16,Non qualifiée,3.928565802,43.951404499,QmnJ,Y340402001,Le Vidourle à Conqueyrac [Barrage de Conqueyrac],QmnJ,Automne
+O2550002,O255000201,2020-03-26,5141.0,2025-04-24T15:12:27Z,16,Donnée validée,10,Expertisée,20,Bonne,1.244217269,43.728025068,QmnJ,O255000201,La Save à Larra,QmnJ,Printemps
+Y3404020,Y340402001,2021-05-12,2281.0,2025-04-24T17:10:45Z,16,Donnée validée,10,Expertisée,20,Bonne,3.928565802,43.951404499,QmnJ,Y340402001,Le Vidourle à Conqueyrac [Barrage de Conqueyrac],QmnJ,Printemps
+O2550002,O255000201,2020-03-03,21965.0,2025-04-24T15:12:27Z,16,Donnée validée,10,Expertisée,20,Bonne,1.244217269,43.728025068,QmnJ,O255000201,La Save à Larra,QmnJ,Printemps
+P2220002,P222000201,2018-02-16,283.0,2025-04-24T16:53:09Z,12,Donnée pré-validée,10,Expertisée,20,Bonne,1.563955176,44.79562402,QmnJ,P222000201,[Source de Fontbelle] à Calès - L'ouysse à Calès (Source de Fontbelle),QmnJ,Hiver
+Y2140010,Y214001002,2018-12-26,21824.0,2025-04-24T18:26:13Z,16,Donnée validée,10,Expertisée,20,Bonne,3.534623845,43.651522709,QmnJ,Y214001002,L'Hérault à Gignac - Aval,QmnJ,Hiver
+Y3404020,Y340402001,2021-02-23,4.0,2025-04-24T17:10:45Z,16,Donnée validée,10,Expertisée,20,Bonne,3.928565802,43.951404499,QmnJ,Y340402001,Le Vidourle à Conqueyrac [Barrage de Conqueyrac],QmnJ,Hiver
