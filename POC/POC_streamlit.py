@@ -20,7 +20,7 @@ st.set_page_config(
 
 # Fonction pour charger les données des mesures hydrométriques
 @st.cache_data
-def load_hydro_data(file_path="POC/mesures_hydro_variees_20250513_120219.csv):
+def load_hydro_data(file_path="POC/mesures_hydro_variees_20250513_120219.csv"):
     try:
         # Chargement du fichier CSV
         df = pd.read_csv(file_path)
