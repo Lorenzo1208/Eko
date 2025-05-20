@@ -20,27 +20,24 @@ st.set_page_config(
 
 # Fonction pour charger les données des mesures hydrométriques
 @st.cache_data
-def load_hydro_data(file_path="mesures_hydro_occitanie_2020_2025_20250520_100820.csv"):
+def load_hydro_data(file_path="mesures_hydro_occitanie_2020_2025_20250520_100820.csv", sample_size=1000):
     try:
-        # Afficher un message pour suivre la progression
-        print(f"Tentative de chargement du fichier : {file_path}")
+        # Déterminer le nombre de lignes total
+        total_lines = sum(1 for _ in open(file_path, 'r', encoding='utf-8'))
         
-        # Chargement du fichier CSV avec plus d'options pour éviter les problèmes
+        # Calculer un pas d'échantillonnage
+        skip_rows = max(1, total_lines // sample_size)
+        
+        # Charger un échantillon du fichier
         df = pd.read_csv(file_path, 
-                         encoding='utf-8',
-                         low_memory=False,
-                         on_bad_lines='skip')
+                         skiprows=lambda i: i > 0 and i % skip_rows != 0,
+                         encoding='utf-8')
         
-        print(f"Fichier chargé avec succès! {len(df)} lignes trouvées.")
-        
-        # Convertir les dates en datetime
+        # Traitement des dates...
         date_column = 'date_obs_elab' if 'date_obs_elab' in df.columns else 'date_obs'
         df['date'] = pd.to_datetime(df[date_column], errors='coerce')
         
-        # Éliminer les lignes avec des dates invalides
-        df = df.dropna(subset=['date'])
-        
-        # Extraire des informations temporelles supplémentaires
+        # Extraire des informations temporelles
         df['year'] = df['date'].dt.year
         df['month'] = df['date'].dt.month
         df['day'] = df['date'].dt.day
@@ -48,10 +45,7 @@ def load_hydro_data(file_path="mesures_hydro_occitanie_2020_2025_20250520_100820
         
         return df
     except Exception as e:
-        # Afficher l'erreur détaillée pour le débogage
-        import traceback
-        print(f"Erreur lors du chargement des données: {str(e)}")
-        print(traceback.format_exc())
+        st.error(f"Erreur lors du chargement des données: {str(e)}")
         return None
 
 # Fonction pour créer un DataFrame des stations uniques avec leurs coordonnées
