@@ -20,7 +20,7 @@ st.set_page_config(
 
 # Fonction pour charger les données des mesures hydrométriques
 @st.cache_data
-def load_hydro_data(file_path="POC/mesures_hydro_variees_20250513_120219.csv"):
+def load_hydro_data(file_path="mesures_hydro_variees_20250513_120219.csv"):
     try:
         # Chargement du fichier CSV
         df = pd.read_csv(file_path)
@@ -513,7 +513,7 @@ def main():
         # Filtrer les données pour la station sélectionnée
         flow_column = 'resultat_obs_elab' if 'resultat_obs_elab' in data.columns else 'resultat_obs'
         station_data = data[data['code_station_id'] == selected_station].copy()
-        
+        station_data = station_data.sort_values('date')
         # Vérifier si des données sont disponibles pour cette station
         if len(station_data) == 0:
             st.warning(f"Aucune donnée de débit disponible pour la station {selected_station}.")
