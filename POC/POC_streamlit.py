@@ -9,6 +9,7 @@ from prophet import Prophet
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
 # Configuration de la page Streamlit
 st.set_page_config(
@@ -363,6 +364,127 @@ def make_predictions(model_info, df, station_id, days=30):
         st.error(f"Erreur lors de la prédiction: {str(e)}")
         st.exception(e)  # Afficher la trace complète pour déboguer
         return None
+
+# Fonction pour évaluer la performance du modèle
+def evaluate_model(model_info, df, station_id):
+    """Évalue la performance du modèle en utilisant une validation temporelle"""
+    if model_info is None or df is None:
+        return None
+    
+    try:
+        # Filtrer les données pour la station sélectionnée
+        station_data = df[df['code_station_id'] == station_id].copy()
+        
+        # Trier les données par date
+        station_data = station_data.sort_values('date')
+        
+        # S'il y a moins de 10 points de données, impossible d'évaluer correctement
+        if len(station_data) < 10:
+            return {
+                "error": "Données insuffisantes pour l'évaluation du modèle",
+                "metrics": None,
+                "predictions": None,
+                "actuals": None,
+                "dates": None
+            }
+            
+        # Identifier la colonne de débit
+        flow_column = 'resultat_obs_elab' if 'resultat_obs_elab' in station_data.columns else 'resultat_obs'
+        
+        # Diviser les données: 80% pour l'entraînement, 20% pour le test (validation temporelle)
+        split_idx = int(len(station_data) * 0.8)
+        train_data = station_data.iloc[:split_idx].copy()
+        test_data = station_data.iloc[split_idx:].copy()
+        
+        # S'il n'y a pas de données de test, impossible d'évaluer
+        if len(test_data) == 0:
+            return {
+                "error": "Période de test vide, impossible d'évaluer le modèle",
+                "metrics": None,
+                "predictions": None,
+                "actuals": None,
+                "dates": None
+            }
+            
+        # Entraîner le modèle sur les données d'entraînement
+        if model_info["type"] == "prophet":
+            # Préparer les données pour Prophet
+            prophet_df = pd.DataFrame({
+                'ds': train_data['date'],
+                'y': train_data[flow_column]
+            })
+            
+            # Créer et entraîner le modèle
+            model = Prophet(daily_seasonality=True)
+            model.fit(prophet_df)
+            
+            # Faire des prédictions sur les dates de test
+            future = pd.DataFrame({"ds": test_data['date']})
+            forecast = model.predict(future)
+            
+            # Extraire les prédictions
+            predictions = forecast["yhat"].values
+            
+        else:  # RandomForest
+            # Préparer les caractéristiques pour RandomForest
+            features = ['month', 'day_of_year']
+            
+            # Ajouter la saison encodée si disponible
+            if 'saison' in train_data.columns:
+                le = LabelEncoder()
+                train_data.loc[:, 'saison_encoded'] = le.fit_transform(train_data['saison'])
+                features.append('saison_encoded')
+                
+                # Encoder également les données de test
+                test_data.loc[:, 'saison_encoded'] = le.transform(test_data['saison'])
+            
+            # Entraîner le modèle
+            X_train = train_data[features].copy()
+            y_train = train_data[flow_column]
+            
+            rf_model = RandomForestRegressor(n_estimators=100, random_state=42)
+            rf_model.fit(X_train, y_train)
+            
+            # Faire des prédictions sur les données de test
+            X_test = test_data[features].copy()
+            predictions = rf_model.predict(X_test)
+        
+        # Récupérer les valeurs réelles
+        actuals = test_data[flow_column].values
+        
+        # Calculer les métriques
+        mae = mean_absolute_error(actuals, predictions)
+        rmse = np.sqrt(mean_squared_error(actuals, predictions))
+        r2 = r2_score(actuals, predictions)
+        
+        # Calculer MAPE (Mean Absolute Percentage Error)
+        # Éviter la division par zéro
+        mape = np.mean(np.abs((actuals - predictions) / np.maximum(np.ones(len(actuals)), np.abs(actuals)))) * 100
+        
+        metrics = {
+            "MAE": mae,  # Erreur absolue moyenne
+            "RMSE": rmse,  # Racine carrée de l'erreur quadratique moyenne
+            "R²": r2,  # Coefficient de détermination
+            "MAPE": mape  # Pourcentage d'erreur absolue moyen
+        }
+        
+        return {
+            "error": None,
+            "metrics": metrics,
+            "predictions": predictions,
+            "actuals": actuals,
+            "dates": test_data['date'].values
+        }
+        
+    except Exception as e:
+        import traceback
+        return {
+            "error": f"Erreur lors de l'évaluation du modèle: {str(e)}\n{traceback.format_exc()}",
+            "metrics": None,
+            "predictions": None,
+            "actuals": None,
+            "dates": None
+        }
 
 # Fonction pour afficher une carte des stations avec PyDeck
 def display_station_map(stations_df, thresholds_df):
@@ -737,160 +859,236 @@ def main():
             if len(station_data) == 0:
                 return
         
-        # Créer et entraîner le modèle
-        with st.spinner("Entraînement du modèle de prédiction..."):
-            try:
-                # DEBUG: Afficher les colonnes disponibles
-                st.write("Colonnes disponibles dans le dataset:", data.columns.tolist())
-                
-                # Vérifier si saison est disponible
-                if 'saison' in data.columns:
-                    st.write("La colonne 'saison' est disponible et contient:", data['saison'].unique())
-                
-                model_info = create_prediction_model(data, selected_station, method=prediction_method.lower())
-                if model_info is None:
-                    st.error("Impossible de créer le modèle de prédiction. Vérifiez les données d'entrée.")
-                    return
-                
-                # DEBUG: Afficher les informations du modèle
-                st.write("Informations du modèle:", {k: v for k, v in model_info.items() if k != 'model'})
-                
-                forecast = make_predictions(model_info, data, selected_station, days=prediction_days)
-                if forecast is None:
-                    st.error("Échec de la prédiction. Vérifiez le modèle.")
-                    return
-            except Exception as e:
-                st.error(f"Erreur lors de la création du modèle de prédiction: {str(e)}")
-                st.exception(e)  # Afficher la trace complète
-                return
+        # Onglets pour séparer les prédictions futures et l'évaluation
+        pred_tab, eval_tab = st.tabs(["Prédictions futures", "Évaluation du modèle"])
         
-        # Visualiser les prédictions
-        fig = go.Figure()
-        
-        # Données historiques
-        fig.add_trace(go.Scatter(
-            x=station_data['date'],
-            y=station_data[flow_column],
-            mode='markers',
-            name='Données historiques',
-            marker=dict(color='blue', size=6)
-        ))
-        
-        # Ajouter une ligne de tendance pour les données historiques
-        fig.add_trace(go.Scatter(
-            x=station_data['date'],
-            y=station_data[flow_column],
-            mode='lines',
-            name='Tendance historique',
-            line=dict(color='royalblue', width=1)
-        ))
-        
-        # Prédictions
-        fig.add_trace(go.Scatter(
-            x=forecast['date'],
-            y=forecast['prediction'],
-            mode='lines',
-            name='Prédiction',
-            line=dict(color='red', width=2)
-        ))
-        
-        # Intervalle de confiance
-        fig.add_trace(go.Scatter(
-            x=forecast['date'],
-            y=forecast['upper_bound'],
-            mode='lines',
-            line=dict(width=0),
-            showlegend=False
-        ))
-        
-        fig.add_trace(go.Scatter(
-            x=forecast['date'],
-            y=forecast['lower_bound'],
-            mode='lines',
-            line=dict(width=0),
-            fill='tonexty',
-            fillcolor='rgba(255, 0, 0, 0.2)',
-            name='Intervalle de confiance'
-        ))
-        
-        # Ajouter les seuils d'alerte s'ils existent
-        if thresholds_df is not None:
-            threshold_data = thresholds_df[thresholds_df['code_station_id'] == selected_station]
-            
-            if len(threshold_data) > 0:
-                threshold_data = threshold_data.iloc[0]
-                fig.add_hline(y=threshold_data['seuil_vigilance'], line_dash="dash", line_color="yellow", annotation_text="Vigilance")
-                fig.add_hline(y=threshold_data['seuil_alerte'], line_dash="dash", line_color="orange", annotation_text="Alerte")
-                fig.add_hline(y=threshold_data['seuil_crise'], line_dash="dash", line_color="red", annotation_text="Crise")
-        
-        # Mise en forme du graphique
-        fig.update_layout(
-            title=f"Prédiction des débits pour {station_name}",
-            xaxis_title="Date",
-            yaxis_title="Débit (m³/s)",
-            hovermode="x unified",
-            legend=dict(
-                orientation="h",
-                yanchor="bottom",
-                y=1.02,
-                xanchor="right",
-                x=1
-            )
-        )
-        
-        st.plotly_chart(fig, use_container_width=True)
-        
-        # Informations sur les dépassements de seuil prévus
-        if thresholds_df is not None:
-            threshold_data = thresholds_df[thresholds_df['code_station_id'] == selected_station]
-            
-            if len(threshold_data) > 0:
-                threshold_data = threshold_data.iloc[0]
-                
+        with pred_tab:
+            # Créer et entraîner le modèle
+            with st.spinner("Entraînement du modèle de prédiction..."):
                 try:
-                    # Vérifier s'il y a des dépassements prévus
-                    alert_days = forecast[forecast['prediction'] > threshold_data['seuil_alerte']]
-                    crisis_days = forecast[forecast['prediction'] > threshold_data['seuil_crise']]
+                    model_info = create_prediction_model(data, selected_station, method=prediction_method.lower())
+                    if model_info is None:
+                        st.error("Impossible de créer le modèle de prédiction. Vérifiez les données d'entrée.")
+                        return
                     
-                    st.subheader("Analyse des risques")
+                    forecast = make_predictions(model_info, data, selected_station, days=prediction_days)
+                    if forecast is None:
+                        st.error("Échec de la prédiction. Vérifiez le modèle.")
+                        return
+                except Exception as e:
+                    st.error(f"Erreur lors de la création du modèle de prédiction: {str(e)}")
+                    st.exception(e)  # Afficher la trace complète
+                    return
+            
+            # Visualiser les prédictions
+            fig = go.Figure()
+            
+            # Données historiques
+            fig.add_trace(go.Scatter(
+                x=station_data['date'],
+                y=station_data[flow_column],
+                mode='markers',
+                name='Données historiques',
+                marker=dict(color='blue', size=6)
+            ))
+            
+            # Ajouter une ligne de tendance pour les données historiques
+            fig.add_trace(go.Scatter(
+                x=station_data['date'],
+                y=station_data[flow_column],
+                mode='lines',
+                name='Tendance historique',
+                line=dict(color='royalblue', width=1)
+            ))
+            
+            # Prédictions
+            fig.add_trace(go.Scatter(
+                x=forecast['date'],
+                y=forecast['prediction'],
+                mode='lines',
+                name='Prédiction',
+                line=dict(color='red', width=2)
+            ))
+            
+            # Intervalle de confiance
+            fig.add_trace(go.Scatter(
+                x=forecast['date'],
+                y=forecast['upper_bound'],
+                mode='lines',
+                line=dict(width=0),
+                showlegend=False
+            ))
+            
+            fig.add_trace(go.Scatter(
+                x=forecast['date'],
+                y=forecast['lower_bound'],
+                mode='lines',
+                line=dict(width=0),
+                fill='tonexty',
+                fillcolor='rgba(255, 0, 0, 0.2)',
+                name='Intervalle de confiance'
+            ))
+            
+            # Ajouter les seuils d'alerte s'ils existent
+            if thresholds_df is not None:
+                threshold_data = thresholds_df[thresholds_df['code_station_id'] == selected_station]
+                
+                if len(threshold_data) > 0:
+                    threshold_data = threshold_data.iloc[0]
+                    fig.add_hline(y=threshold_data['seuil_vigilance'], line_dash="dash", line_color="yellow", annotation_text="Vigilance")
+                    fig.add_hline(y=threshold_data['seuil_alerte'], line_dash="dash", line_color="orange", annotation_text="Alerte")
+                    fig.add_hline(y=threshold_data['seuil_crise'], line_dash="dash", line_color="red", annotation_text="Crise")
+            
+            # Mise en forme du graphique
+            fig.update_layout(
+                title=f"Prédiction des débits pour {station_name}",
+                xaxis_title="Date",
+                yaxis_title="Débit (m³/s)",
+                hovermode="x unified",
+                legend=dict(
+                    orientation="h",
+                    yanchor="bottom",
+                    y=1.02,
+                    xanchor="right",
+                    x=1
+                )
+            )
+            
+            st.plotly_chart(fig, use_container_width=True)
+            
+            # Informations sur les dépassements de seuil prévus
+            if thresholds_df is not None:
+                threshold_data = thresholds_df[thresholds_df['code_station_id'] == selected_station]
+                
+                if len(threshold_data) > 0:
+                    threshold_data = threshold_data.iloc[0]
                     
+                    try:
+                        # Vérifier s'il y a des dépassements prévus
+                        alert_days = forecast[forecast['prediction'] > threshold_data['seuil_alerte']]
+                        crisis_days = forecast[forecast['prediction'] > threshold_data['seuil_crise']]
+                        
+                        st.subheader("Analyse des risques")
+                        
+                        col1, col2 = st.columns(2)
+                        
+                        with col1:
+                            st.metric(
+                                "Jours de dépassement du seuil d'alerte prévus", 
+                                len(alert_days),
+                                delta=None,
+                                delta_color="inverse"
+                            )
+                            
+                            if len(alert_days) > 0:
+                                st.write("Dates prévues de dépassement du seuil d'alerte:")
+                                alert_dates = [d.strftime("%d/%m/%Y") for d in alert_days['date']]
+                                # Limiter le nombre de dates affichées si nécessaire
+                                if len(alert_dates) > 10:
+                                    st.write(", ".join(alert_dates[:10]) + f" et {len(alert_dates) - 10} autres jours")
+                                else:
+                                    st.write(", ".join(alert_dates))
+                        
+                        with col2:
+                            st.metric(
+                                "Jours de dépassement du seuil de crise prévus", 
+                                len(crisis_days),
+                                delta=None,
+                                delta_color="inverse"
+                            )
+                            
+                            if len(crisis_days) > 0:
+                                st.write("Dates prévues de dépassement du seuil de crise:")
+                                crisis_dates = [d.strftime("%d/%m/%Y") for d in crisis_days['date']]
+                                # Limiter le nombre de dates affichées si nécessaire
+                                if len(crisis_dates) > 10:
+                                    st.write(", ".join(crisis_dates[:10]) + f" et {len(crisis_dates) - 10} autres jours")
+                                else:
+                                    st.write(", ".join(crisis_dates))
+                    except Exception as e:
+                        st.error(f"Erreur lors de l'analyse des risques: {str(e)}")
+        
+        with eval_tab:
+            st.subheader("Évaluation de la performance du modèle")
+            
+            # Évaluer le modèle
+            with st.spinner("Évaluation du modèle en cours..."):
+                evaluation = evaluate_model(model_info, data, selected_station)
+                
+                if evaluation["error"]:
+                    st.error(evaluation["error"])
+                elif evaluation["metrics"] is None:
+                    st.warning("Impossible de calculer les métriques d'évaluation.")
+                else:
+                    # Afficher les métriques dans une mise en page propre
+                    st.markdown("### Métriques de performance")
+                    
+                    # Utiliser des colonnes pour afficher les métriques côte à côte
                     col1, col2 = st.columns(2)
                     
                     with col1:
-                        st.metric(
-                            "Jours de dépassement du seuil d'alerte prévus", 
-                            len(alert_days),
-                            delta=None,
-                            delta_color="inverse"
-                        )
+                        st.metric("MAE (Erreur absolue moyenne)", f"{evaluation['metrics']['MAE']:.2f} m³/s")
+                        st.metric("R² (Coefficient de détermination)", f"{evaluation['metrics']['R²']:.3f}")
                         
-                        if len(alert_days) > 0:
-                            st.write("Dates prévues de dépassement du seuil d'alerte:")
-                            alert_dates = [d.strftime("%d/%m/%Y") for d in alert_days['date']]
-                            # Limiter le nombre de dates affichées si nécessaire
-                            if len(alert_dates) > 10:
-                                st.write(", ".join(alert_dates[:10]) + f" et {len(alert_dates) - 10} autres jours")
-                            else:
-                                st.write(", ".join(alert_dates))
-                    
                     with col2:
-                        st.metric(
-                            "Jours de dépassement du seuil de crise prévus", 
-                            len(crisis_days),
-                            delta=None,
-                            delta_color="inverse"
-                        )
-                        
-                        if len(crisis_days) > 0:
-                            st.write("Dates prévues de dépassement du seuil de crise:")
-                            crisis_dates = [d.strftime("%d/%m/%Y") for d in crisis_days['date']]
-                            # Limiter le nombre de dates affichées si nécessaire
-                            if len(crisis_dates) > 10:
-                                st.write(", ".join(crisis_dates[:10]) + f" et {len(crisis_dates) - 10} autres jours")
-                            else:
-                                st.write(", ".join(crisis_dates))
-                except Exception as e:
-                    st.error(f"Erreur lors de l'analyse des risques: {str(e)}")
+                        st.metric("RMSE (Racine de l'erreur quadratique moyenne)", f"{evaluation['metrics']['RMSE']:.2f} m³/s")
+                        st.metric("MAPE (% d'erreur absolue moyen)", f"{evaluation['metrics']['MAPE']:.2f}%")
+                    
+                    # Afficher l'interprétation des résultats
+                    st.markdown("""
+                    **Interprétation des métriques:**
+                    - **MAE**: Indique l'erreur moyenne en valeur absolue. Plus la valeur est basse, meilleur est le modèle.
+                    - **RMSE**: Plus sensible aux erreurs importantes. Une valeur plus basse est meilleure.
+                    - **R²**: Varie de 0 à 1. Plus la valeur est proche de 1, mieux le modèle explique la variance des données.
+                    - **MAPE**: Exprime l'erreur en pourcentage, permettant une interprétation plus intuitive.
+                    """)
+                    
+                    # Créer un graphique pour comparer les prédictions et les valeurs réelles
+                    fig = go.Figure()
+                    
+                    # Ajouter les valeurs réelles
+                    fig.add_trace(go.Scatter(
+                        x=evaluation["dates"],
+                        y=evaluation["actuals"],
+                        mode='markers',
+                        name='Valeurs réelles',
+                        marker=dict(color='blue', size=8)
+                    ))
+                    
+                    # Ajouter les prédictions
+                    fig.add_trace(go.Scatter(
+                        x=evaluation["dates"],
+                        y=evaluation["predictions"],
+                        mode='lines+markers',
+                        name='Prédictions',
+                        line=dict(color='red', width=2),
+                        marker=dict(color='red', size=6)
+                    ))
+                    
+                    # Mise en forme du graphique
+                    fig.update_layout(
+                        title=f"Comparaison des prédictions et valeurs réelles ({model_info['type']})",
+                        xaxis_title="Date",
+                        yaxis_title="Débit (m³/s)",
+                        hovermode="x unified"
+                    )
+                    
+                    st.plotly_chart(fig, use_container_width=True)
+                    
+                    # Afficher un résumé de l'évaluation
+                    st.markdown(f"""
+                    ### Résumé de l'évaluation
+                    
+                    Le modèle **{model_info['type']}** a été évalué sur {len(evaluation['actuals'])} points de données de test.
+                    
+                    **Performance générale**: 
+                    {'Bonne' if evaluation['metrics']['R²'] > 0.7 else 'Moyenne' if evaluation['metrics']['R²'] > 0.5 else 'Faible'}
+                    
+                    - Le modèle présente une erreur moyenne de **{evaluation['metrics']['MAE']:.2f} m³/s**
+                    - En termes relatifs, l'erreur moyenne est de **{evaluation['metrics']['MAPE']:.2f}%**
+                    - Le modèle explique **{evaluation['metrics']['R²']*100:.1f}%** de la variance des données
+                    """)
+    
     elif display_type == "Méthodologie":
         st.header("Méthodologie et explications détaillées")
         
@@ -1048,6 +1246,21 @@ def main():
             │  des variables │     │  croisée       │     │  risques       │
             └────────────────┘     └────────────────┘     └────────────────┘
             ```
+            """)
+            
+            # Ajouter des métriques d'évaluation
+            st.markdown("""
+            ### Évaluation des modèles
+            
+            Pour évaluer la qualité des prédictions, l'application utilise plusieurs métriques :
+            
+            1. **MAE (Mean Absolute Error)** : Erreur absolue moyenne entre les prédictions et les valeurs réelles
+            2. **RMSE (Root Mean Square Error)** : Racine carrée de l'erreur quadratique moyenne
+            3. **R² (Coefficient de détermination)** : Mesure la proportion de la variance expliquée par le modèle
+            4. **MAPE (Mean Absolute Percentage Error)** : Mesure l'erreur en pourcentage pour une meilleure interprétation
+            
+            Ces métriques sont calculées sur un ensemble de test (20% des données les plus récentes) qui n'a pas été utilisé 
+            pour l'entraînement du modèle, assurant ainsi une évaluation impartiale.
             """)
         
         with tab4:
