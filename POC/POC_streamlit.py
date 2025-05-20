@@ -22,12 +22,23 @@ st.set_page_config(
 @st.cache_data
 def load_hydro_data(file_path="mesures_hydro_occitanie_2020_2025_20250520_100820.csv"):
     try:
-        # Chargement du fichier CSV
-        df = pd.read_csv(file_path)
+        # Afficher un message pour suivre la progression
+        print(f"Tentative de chargement du fichier : {file_path}")
+        
+        # Chargement du fichier CSV avec plus d'options pour éviter les problèmes
+        df = pd.read_csv(file_path, 
+                         encoding='utf-8',
+                         low_memory=False,
+                         on_bad_lines='skip')
+        
+        print(f"Fichier chargé avec succès! {len(df)} lignes trouvées.")
         
         # Convertir les dates en datetime
         date_column = 'date_obs_elab' if 'date_obs_elab' in df.columns else 'date_obs'
-        df['date'] = pd.to_datetime(df[date_column])
+        df['date'] = pd.to_datetime(df[date_column], errors='coerce')
+        
+        # Éliminer les lignes avec des dates invalides
+        df = df.dropna(subset=['date'])
         
         # Extraire des informations temporelles supplémentaires
         df['year'] = df['date'].dt.year
@@ -37,7 +48,10 @@ def load_hydro_data(file_path="mesures_hydro_occitanie_2020_2025_20250520_100820
         
         return df
     except Exception as e:
-        st.error(f"Erreur lors du chargement des données: {str(e)}")
+        # Afficher l'erreur détaillée pour le débogage
+        import traceback
+        print(f"Erreur lors du chargement des données: {str(e)}")
+        print(traceback.format_exc())
         return None
 
 # Fonction pour créer un DataFrame des stations uniques avec leurs coordonnées
