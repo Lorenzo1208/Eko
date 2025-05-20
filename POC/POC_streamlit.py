@@ -513,9 +513,8 @@ def main():
     
     # 2. Type d'affichage
     display_type = st.sidebar.radio(
-        "Type d'affichage",
-        ["Carte des stations", "Historique des débits", "Seuils d'alerte", "Prédictions"]
-    )
+    "Type d'affichage",
+    ["Carte des stations", "Historique des débits", "Seuils d'alerte", "Prédictions", "Méthodologie"])
     
     # 3. Options pour les prédictions
     if display_type == "Prédictions":
@@ -892,6 +891,203 @@ def main():
                                 st.write(", ".join(crisis_dates))
                 except Exception as e:
                     st.error(f"Erreur lors de l'analyse des risques: {str(e)}")
+    elif display_type == "Méthodologie":
+        st.header("Méthodologie et explications détaillées")
+        
+        # Utilisation des onglets pour organiser les explications
+        tab1, tab2, tab3, tab4 = st.tabs(["Sources de données", "Calcul des seuils", "Modèles de prédiction", "Limites et perspectives"])
+        
+        with tab1:
+            st.subheader("Sources et collecte des données")
+            st.markdown("""
+            ### Origine des données
+            
+            Les données hydrométriques utilisées dans cette application proviennent de l'**API Hub'Eau** (Hydrométrie) qui centralise 
+            les mesures des stations de surveillance des cours d'eau français.
+            
+            ### Processus de collecte
+            
+            1. **Sélection des stations** : L'application utilise les données de stations hydrométriques situées en région Occitanie.
+            - Nombre total de stations surveillées : {stations_count}
+            - Période couverte : {period_start} à {period_end}
+            
+            2. **Types de données collectées** :
+            - **Débits journaliers** (QmnJ) : Valeurs moyennes journalières des débits en m³/s
+            - **Hauteurs d'eau** (HmnJ) : Mesures des niveaux d'eau en mètres
+            
+            3. **Volume de données** :
+            - Nombre total d'observations : {total_obs}
+            - Répartition temporelle : Les données sont réparties sur plusieurs saisons pour assurer une bonne représentativité
+            """.format(
+                stations_count=data['code_station_id'].nunique(),
+                period_start=data['date'].min().strftime('%d/%m/%Y'),
+                period_end=data['date'].max().strftime('%d/%m/%Y'),
+                total_obs=len(data)
+            ))
+            
+            # Ajouter un graphique montrant la répartition des données
+            if 'saison' in data.columns:
+                season_counts = data['saison'].value_counts().reset_index()
+                season_counts.columns = ['Saison', 'Nombre d\'observations']
+                
+                # Créer un ordre personnalisé pour les saisons
+                season_order = ['Hiver', 'Printemps', 'Été', 'Automne']
+                season_counts['Saison'] = pd.Categorical(season_counts['Saison'], categories=season_order, ordered=True)
+                season_counts = season_counts.sort_values('Saison')
+                
+                fig = px.bar(
+                    season_counts,
+                    x='Saison',
+                    y='Nombre d\'observations',
+                    title="Répartition des observations par saison",
+                    color='Saison',
+                    color_discrete_map={
+                        'Hiver': 'royalblue',
+                        'Printemps': 'mediumseagreen',
+                        'Été': 'orange',
+                        'Automne': 'brown'
+                    }
+                )
+                st.plotly_chart(fig, use_container_width=True)
+        
+        with tab2:
+            st.subheader("Calcul des seuils d'alerte")
+            st.markdown("""
+            ### Méthodologie de calcul des seuils
+            
+            Les seuils d'alerte sont calculés à partir des statistiques historiques des débits pour chaque station. L'application 
+            utilise une approche basée sur les percentiles de la distribution des débits observés.
+            
+            **Seuils calculés** :
+            
+            1. **Seuil de vigilance** (75ème percentile)
+            - Représente le niveau au-delà duquel une attention particulière est recommandée
+            - Formule : 75% des observations historiques sont inférieures à ce seuil
+            
+            2. **Seuil d'alerte** (90ème percentile)
+            - Indique un niveau élevé nécessitant une surveillance accrue
+            - Formule : 90% des observations historiques sont inférieures à ce seuil
+            
+            3. **Seuil d'alerte renforcée** (95ème percentile)
+            - Signale un niveau très élevé pouvant conduire à des restrictions
+            - Formule : 95% des observations historiques sont inférieures à ce seuil
+            
+            4. **Seuil de crise** (98ème percentile)
+            - Indique un niveau critique requérant des mesures d'urgence
+            - Formule : 98% des observations historiques sont inférieures à ce seuil
+            
+            ### Seuils mensuels
+            
+            L'application calcule également des seuils spécifiques pour chaque mois de l'année, permettant de prendre en compte 
+            les variations saisonnières des débits. Cette approche permet une plus grande précision dans la détection des anomalies.
+            
+            **Note importante** : Ces seuils sont calculés à titre indicatif à partir des données historiques et ne remplacent pas 
+            les seuils réglementaires officiels définis par les autorités compétentes.
+            """)
+            
+            # Illustration du calcul des percentiles
+            st.image("https://miro.medium.com/max/1200/1*2c21SkzJMf3frPXPAR_gZA.png", 
+                    caption="Illustration de la notion de percentile sur une distribution statistique")
+        
+        with tab3:
+            st.subheader("Modèles de prédiction")
+            st.markdown("""
+            ### Méthodes de prédiction utilisées
+            
+            L'application propose deux approches différentes pour la prédiction des débits futurs :
+            
+            #### 1. Random Forest (Forêt aléatoire)
+            
+            Un modèle d'apprentissage automatique basé sur un ensemble d'arbres de décision.
+            
+            **Caractéristiques** :
+            - Utilise les variables : mois, jour de l'année, saison
+            - Nombre d'arbres : 100
+            - Validation croisée : Séparation 80% entraînement / 20% test
+            
+            **Avantages** :
+            - Capture les relations non-linéaires
+            - Robuste face aux valeurs aberrantes
+            - Performant avec peu de données
+            
+            #### 2. Prophet (développé par Facebook)
+            
+            Un modèle de série temporelle conçu pour capturer les tendances et saisonnalités.
+            
+            **Caractéristiques** :
+            - Décompose la série en tendance, saisonnalité et composante résiduelle
+            - Intègre des facteurs de saisonnalité quotidienne
+            
+            **Avantages** :
+            - Capture efficacement les tendances et cycles saisonniers
+            - Gère bien les données manquantes
+            - Fournit des intervalles de confiance
+            
+            ### Intervalles de confiance
+            
+            Les prédictions sont accompagnées d'intervalles de confiance pour indiquer le niveau d'incertitude.
+            
+            - Pour **Random Forest** : Intervalle calculé à partir de l'écart-type (± 1.96σ)
+            - Pour **Prophet** : Intervalles de prédiction natifs
+            """)
+            
+            # Diagramme illustrant le processus de prédiction
+            st.markdown("""
+            ### Processus de prédiction
+            
+            ```
+            ┌────────────────┐     ┌────────────────┐     ┌────────────────┐
+            │  Données       │     │  Entraînement  │     │  Génération    │
+            │  historiques   │────>│  du modèle     │────>│  de prédictions │
+            └────────────────┘     └────────────────┘     └────────────────┘
+                    │                      │                      │
+                    │                      │                      │
+                    ▼                      ▼                      ▼
+            ┌────────────────┐     ┌────────────────┐     ┌────────────────┐
+            │  Extraction    │     │  Validation    │     │  Analyse des   │
+            │  des variables │     │  croisée       │     │  risques       │
+            └────────────────┘     └────────────────┘     └────────────────┘
+            ```
+            """)
+        
+        with tab4:
+            st.subheader("Limites et perspectives d'amélioration")
+            st.markdown("""
+            ### Limites actuelles
+            
+            **Limites des données** :
+            - Certaines stations disposent de peu d'observations
+            - Données parfois discontinues dans le temps
+            - Absence de certaines variables contextuelles (précipitations, température)
+            
+            **Limites des modèles** :
+            - Prédictions à plus de 30 jours peuvent manquer de fiabilité
+            - Difficulté à prévoir des événements extrêmes
+            - Modèles non calibrés pour les crues exceptionnelles
+            
+            ### Perspectives d'amélioration
+            
+            **Enrichissement des données** :
+            - Intégration de données météorologiques (précipitations, températures)
+            - Ajout de caractéristiques géographiques des bassins versants
+            - Collecte de données historiques plus complètes
+            
+            **Améliorations techniques** :
+            - Développement de modèles hybrides combinant différentes approches
+            - Utilisation de techniques d'apprentissage profond pour les séries temporelles
+            - Intégration d'algorithmes de détection d'anomalies plus sophistiqués
+            
+            **Évolutions fonctionnelles** :
+            - Système d'alerte par email ou SMS
+            - Interface mobile optimisée
+            - Intégration avec d'autres sources de données environnementales
+            """)
+            
+            # Ajouter une citation ou référence
+            st.info("""
+            **Pour en savoir plus** : Cette application s'inspire des méthodes utilisées par le Service Central 
+            d'Hydrométéorologie et d'Appui à la Prévision des Inondations (SCHAPI) et les Services de Prévision des Crues (SPC).
+            """)
     
     # Pied de page
     st.markdown("---")
