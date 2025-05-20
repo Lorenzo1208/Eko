@@ -675,6 +675,7 @@ def main():
         # Filtrer les données pour la station sélectionnée
         flow_column = 'resultat_obs_elab' if 'resultat_obs_elab' in data.columns else 'resultat_obs'
         station_data = data[data['code_station_id'] == selected_station].copy()
+        station_data = station_data.sort_values('date')
         
         if len(station_data) < 10:
             st.warning("Données insuffisantes pour faire des prédictions fiables. Un minimum de 10 points de données est recommandé.")
