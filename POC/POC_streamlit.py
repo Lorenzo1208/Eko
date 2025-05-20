@@ -20,32 +20,80 @@ st.set_page_config(
 
 # Fonction pour charger les données des mesures hydrométriques
 @st.cache_data
-def load_hydro_data(file_path="mesures_hydro_occitanie_2020_2025_20250520_100820.csv", sample_size=1000):
+def load_hydro_data(file_path="mesures_hydro_occitanie_2020_2025_20250520_100820.csv"):
     try:
-        # Déterminer le nombre de lignes total
-        total_lines = sum(1 for _ in open(file_path, 'r', encoding='utf-8'))
+        # Vérifier si le fichier existe dans le répertoire POC
+        import os
+        if not os.path.exists(file_path) and os.path.exists(f"POC/{file_path}"):
+            file_path = f"POC/{file_path}"
         
-        # Calculer un pas d'échantillonnage
-        skip_rows = max(1, total_lines // sample_size)
+        st.write(f"Tentative de chargement du fichier : {file_path}")
         
-        # Charger un échantillon du fichier
+        # Chargement du fichier CSV avec des options plus robustes
         df = pd.read_csv(file_path, 
-                         skiprows=lambda i: i > 0 and i % skip_rows != 0,
-                         encoding='utf-8')
+                         encoding='utf-8', 
+                         low_memory=False, 
+                         on_bad_lines='skip')
         
-        # Traitement des dates...
-        date_column = 'date_obs_elab' if 'date_obs_elab' in df.columns else 'date_obs'
+        # Vérifier que les colonnes attendues existent
+        date_column = None
+        if 'date_obs_elab' in df.columns:
+            date_column = 'date_obs_elab'
+        elif 'date_obs' in df.columns:
+            date_column = 'date_obs'
+        else:
+            st.warning("Aucune colonne de date trouvée. Vérifiez le format du fichier.")
+            # Créer une colonne date par défaut
+            df['date'] = pd.Timestamp('2025-01-01')
+            return df
+        
+        # Convertir les dates en datetime avec gestion des erreurs
         df['date'] = pd.to_datetime(df[date_column], errors='coerce')
         
-        # Extraire des informations temporelles
+        # Supprimer les lignes avec des dates invalides
+        invalid_dates = df['date'].isna().sum()
+        if invalid_dates > 0:
+            st.warning(f"{invalid_dates} lignes avec des dates invalides ont été trouvées et seront ignorées.")
+            df = df.dropna(subset=['date'])
+        
+        # Extraire des informations temporelles supplémentaires
         df['year'] = df['date'].dt.year
         df['month'] = df['date'].dt.month
         df['day'] = df['date'].dt.day
         df['day_of_year'] = df['date'].dt.dayofyear
         
+        # Assurez-vous que la colonne 'code_station_id' existe
+        if 'code_station_id' not in df.columns and 'code_entite' in df.columns:
+            df['code_station_id'] = df['code_entite']
+        
+        # Assurez-vous que la colonne 'nom_station' existe
+        if 'nom_station' not in df.columns and 'libelle_station' in df.columns:
+            df['nom_station'] = df['libelle_station']
+        
+        # Vérifier que les colonnes essentielles existent
+        flow_column = 'resultat_obs_elab' if 'resultat_obs_elab' in df.columns else 'resultat_obs'
+        if flow_column not in df.columns:
+            st.error(f"Colonne de débit '{flow_column}' non trouvée dans le fichier.")
+            # Créer une colonne factice pour éviter les erreurs
+            df[flow_column] = 10.0  # Valeur par défaut
+        
+        st.success(f"Fichier chargé avec succès : {len(df)} lignes de données.")
         return df
+    
+    except FileNotFoundError:
+        st.error(f"Fichier non trouvé : {file_path}")
+        st.info("Veuillez uploader votre fichier CSV de données hydrométriques.")
+        return None
+    except pd.errors.EmptyDataError:
+        st.error(f"Le fichier {file_path} est vide.")
+        return None
+    except pd.errors.ParserError:
+        st.error(f"Erreur lors de l'analyse du fichier {file_path}. Format CSV incorrect.")
+        return None
     except Exception as e:
+        import traceback
         st.error(f"Erreur lors du chargement des données: {str(e)}")
+        st.code(traceback.format_exc())
         return None
 
 # Fonction pour créer un DataFrame des stations uniques avec leurs coordonnées
@@ -156,7 +204,7 @@ def create_prediction_model(df, station_id, method="randomforest"):
         
     try:
         # Filtrer les données pour la station sélectionnée
-        station_data = df[df['code_station_id'] == station_id]
+        station_data = df[df['code_station_id'] == station_id].copy()  # Ajout de .copy()
         
         # Vérifier s'il y a suffisamment de données
         if len(station_data) < 10:
@@ -182,7 +230,7 @@ def create_prediction_model(df, station_id, method="randomforest"):
             # Préparer les données pour RandomForest
             flow_column = 'resultat_obs_elab' if 'resultat_obs_elab' in station_data.columns else 'resultat_obs'
             
-            # Caractéristiques de base pour le modèle (indépendantes de la saison)
+            # Caractéristiques de base pour le modèle
             features = ['month', 'day_of_year']
             
             # Ajouter la saison encodée si disponible
@@ -190,12 +238,12 @@ def create_prediction_model(df, station_id, method="randomforest"):
             if 'saison' in station_data.columns:
                 # Encoder la saison
                 le = LabelEncoder()
-                station_data['saison_encoded'] = le.fit_transform(station_data['saison'])
+                station_data.loc[:, 'saison_encoded'] = le.fit_transform(station_data['saison'])  # Utilisation de .loc
                 features.append('saison_encoded')
                 saison_encoder = le
             
             # S'assurer que toutes les features existent
-            X = station_data[features].copy()  # Créer une copie pour éviter les warnings
+            X = station_data[features].copy()
             y = station_data[flow_column]
             
             # Diviser en ensembles d'entraînement et de test
@@ -522,6 +570,7 @@ def main():
         flow_column = 'resultat_obs_elab' if 'resultat_obs_elab' in data.columns else 'resultat_obs'
         station_data = data[data['code_station_id'] == selected_station].copy()
         station_data = station_data.sort_values('date')
+        
         # Vérifier si des données sont disponibles pour cette station
         if len(station_data) == 0:
             st.warning(f"Aucune donnée de débit disponible pour la station {selected_station}.")
@@ -683,7 +732,6 @@ def main():
         # Filtrer les données pour la station sélectionnée
         flow_column = 'resultat_obs_elab' if 'resultat_obs_elab' in data.columns else 'resultat_obs'
         station_data = data[data['code_station_id'] == selected_station].copy()
-        station_data = station_data.sort_values('date')
         
         if len(station_data) < 10:
             st.warning("Données insuffisantes pour faire des prédictions fiables. Un minimum de 10 points de données est recommandé.")
